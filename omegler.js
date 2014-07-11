@@ -3,10 +3,12 @@ $(document).ready(function () {
     var paused = false;
     var pause = $("<button>Pause Omegler</button>").bind('click', function(){
         paused = !paused;
-        $(this).text(paused && 'Omegler Paused' || 'Pause Omegler');
+        $(this).text(paused && 'Unpause Omegler' || 'Pause Omegler');
     });
     var greeting = $("<button>Change Greeting</button>").bind('click', function(){
-        chrome.storage.sync.set({"text": prompt('What would you like your greeting to be?')});
+        var newGreeting = prompt('What would you like your greeting to be?');
+        if (newGreeting !== null)
+            chrome.storage.sync.set({"text": newGreeting});
     });
     $("#tagline").html('<br>').prepend(pause).append(greeting);
 

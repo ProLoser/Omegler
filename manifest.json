@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Omegler",
-  "version": "0.0.2",
+  "version": "0.0.3",
 
   "description": "Omegle Chat Helper",
   "icons": { "16": "translogo.png",
