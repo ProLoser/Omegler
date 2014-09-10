@@ -6,7 +6,11 @@ $(document).ready(function () {
         $(this).text(paused && 'Unpause Omegler' || 'Pause Omegler');
     });
     var greeting = $("<button>Change Greeting</button>").bind('click', function(){
-            chrome.storage.sync.set({"text": newGreeting});
+        chrome.storage.sync.get("text", function (val) {
+            var newGreeting = prompt('Please enter a new greeting:', val["text"]||'');
+            if (newGreeting !== null)
+                chrome.storage.sync.set({"text": newGreeting});
+        });
     });
     $("#tagline").html('<br>').prepend(pause).append(greeting);
 
@@ -17,7 +21,7 @@ $(document).ready(function () {
         });
     });
 
-    function write(msg,start) {
+    function write(msg) {
         $(".chatmsg", document).html(msg);
         if ($(".sendbtn", document).is(":disabled")) {
             return setTimeout(function () {
