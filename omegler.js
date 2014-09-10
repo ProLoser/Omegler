@@ -6,8 +6,6 @@ $(document).ready(function () {
         $(this).text(paused && 'Unpause Omegler' || 'Pause Omegler');
     });
     var greeting = $("<button>Change Greeting</button>").bind('click', function(){
-        var newGreeting = prompt('What would you like your greeting to be?');
-        if (newGreeting !== null)
             chrome.storage.sync.set({"text": newGreeting});
     });
     $("#tagline").html('<br>').prepend(pause).append(greeting);
