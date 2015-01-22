@@ -1,0 +1,6 @@
+#tagline button {
+	display: block;
+	position: relative;
+	z-index: 2;
+	height: 30px;
+}

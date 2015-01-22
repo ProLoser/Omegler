@@ -12,7 +12,7 @@ $(document).ready(function () {
                 chrome.storage.sync.set({"text": newGreeting});
         });
     });
-    $("#tagline").html('<br>').prepend(pause).append(greeting);
+    $("#tagline").html('').prepend(pause).append(greeting);
 
     $("#textbtn").click(function start(){
         console.log("[debug] start");
