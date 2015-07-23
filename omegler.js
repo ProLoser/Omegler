@@ -8,8 +8,11 @@ $(document).ready(function () {
     var greeting = $("<button>Change Greeting</button>").bind('click', function(){
         chrome.storage.sync.get("text", function (val) {
             var newGreeting = prompt('Please enter a new greeting:', val["text"]||'');
-            if (newGreeting !== null)
+            if (newGreeting !== null) {
+                var delay = prompt('Please enter an optional delay before sending in seconds', 0.5);
                 chrome.storage.sync.set({"text": newGreeting});
+                chrome.storage.sync.set({"delay": delay});
+            }
         });
     });
     $("#tagline").html('').prepend(pause).append(greeting);
@@ -21,7 +24,7 @@ $(document).ready(function () {
         });
     });
 
-    function write(msg) {
+    function write(msg, delay) {
         $(".chatmsg", document).html(msg);
         if ($(".sendbtn", document).is(":disabled")) {
             return setTimeout(function () {
@@ -29,7 +32,10 @@ $(document).ready(function () {
             }, 200);
         }
         stopper = 0;
-        $(".sendbtn", document).click();
+        
+        setTimeout(function(){
+            $(".sendbtn", document).click();
+        }, delay || 0);
     }
 
     function reconnect(double){
@@ -37,12 +43,12 @@ $(document).ready(function () {
         msgCount = 0;
         clearInterval(timeout);
         $(".disconnectbtn", document).click();
-        if(double){
+        if (double) {
             $(".disconnectbtn", document).click();
             $(".disconnectbtn", document).click();
         }
-        chrome.storage.sync.get("text", function (val) {
-            write(val["text"]);
+        chrome.storage.sync.get({text:'Hello there!', delay: 0 }, function (val) {
+            write(val.text, val.delay);
         });
     }
 
