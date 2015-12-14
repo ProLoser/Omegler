@@ -37,6 +37,7 @@ $(document).ready(function () {
      	chrome.storage.sync.get("delay", function (val) {
         	setTimeout(function(){
 				console.log("[debug] .sendbtn setTimeout called delay=" + val["delay"]);
+				$(".statuslog:first", document).html(new Date() + "<br>" + $(".statuslog:first", document).html());
 				$(".sendbtn", document).click();
 			}, val.delay || 0);
         });
