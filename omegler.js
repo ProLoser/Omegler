@@ -6,10 +6,10 @@ $(document).ready(function () {
         $(this).text(paused && 'Unpause Omegler' || 'Pause Omegler');
     });
     var greeting = $("<button>Change Greeting</button>").bind('click', function(){
-        chrome.storage.sync.get("text", function (val) {
-            var newGreeting = prompt('Please enter a new greeting:', val["text"]||'');
+		chrome.storage.sync.get({text:'Hello there!', delay: 0 }, function (val) {
+            var newGreeting = prompt('Please enter a new greeting:', val.text||'');
             if (newGreeting !== null) {
-                var delay = prompt('Please enter an optional delay before sending in seconds', 0.5);
+                var delay = prompt('Please enter an optional delay before sending in milliseconds', val.delay||500);
                 chrome.storage.sync.set({"text": newGreeting});
                 chrome.storage.sync.set({"delay": delay});
             }
@@ -19,12 +19,13 @@ $(document).ready(function () {
 
     $("#textbtn").click(function start(){
         console.log("[debug] start");
-        chrome.storage.sync.get("text", function (val) {
-            write(val["text"],true);
-        });
+		chrome.storage.sync.get({text:'Hello there!', delay: 0 }, function (val) {
+			write(val.text, val.delay);
+		});
     });
 
     function write(msg, delay) {
+        console.log("[debug] write called delay=" + delay + "// msg=" + msg);
         $(".chatmsg", document).html(msg);
         if ($(".sendbtn", document).is(":disabled")) {
             return setTimeout(function () {
@@ -33,23 +34,33 @@ $(document).ready(function () {
         }
         stopper = 0;
         
-        setTimeout(function(){
-            $(".sendbtn", document).click();
-        }, delay || 0);
+     	chrome.storage.sync.get("delay", function (val) {
+        	setTimeout(function(){
+				console.log("[debug] .sendbtn setTimeout called delay=" + val["delay"]);
+				$(".statuslog:first", document).html(new Date() + "<br>" + $(".statuslog:first", document).html());
+				$(".sendbtn", document).click();
+			}, val.delay || 0);
+        });
     }
 
     function reconnect(double){
-        stopper = 1;
-        msgCount = 0;
-        clearInterval(timeout);
-        $(".disconnectbtn", document).click();
-        if (double) {
+        console.log("[debug] reconnect");
+        if (msgCount < 10){
+            stopper = 1;
+            msgCount = 0;
+            clearInterval(timeout);
             $(".disconnectbtn", document).click();
-            $(".disconnectbtn", document).click();
+            if (double) {
+                $(".disconnectbtn", document).click();
+                $(".disconnectbtn", document).click();
+            }
+            chrome.storage.sync.get({text:'Hello there!', delay: 0 }, function (val) {
+                write(val.text, val.delay);
+            });
         }
-        chrome.storage.sync.get({text:'Hello there!', delay: 0 }, function (val) {
-            write(val.text, val.delay);
-        });
+        else{
+            $(".chatmsg", document).html('Save chat log if desired and then Reload page to continue.');
+        }
     }
 
     var msgCount = 0;
