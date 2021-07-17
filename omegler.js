@@ -28,7 +28,7 @@ $(document).ready(function () {
         $(".chatmsg", document).html(msg);
         if ($(".sendbtn", document).is(":disabled")) {
             return setTimeout(function () {
-                write(msg);
+                write(msg, delay);
             }, 200);
         }
         stopper = 0;
